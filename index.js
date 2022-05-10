@@ -31,6 +31,9 @@ function main(){
     if (userChoice.main === 'Add a Role'){
       addRole();
     }
+    if (userChoice.main === 'Add an Employee'){
+      addEmployee();
+    }
   })
 }
 
@@ -109,5 +112,34 @@ function addRole(){
   })
 }
 
-
-// main();
+function addEmployee(){
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'first_name',
+      message: 'Enter first name',
+    },
+    {
+      type: 'input',
+      name: 'last_name',
+      message: 'Enter last name',
+    },
+    {
+      type: 'input',
+      name: 'role_id',
+      message: 'What is the role of this new employee?',
+    },
+    {
+      type: 'input',
+      name: 'manager_id',
+      message: 'Who is the manager of this new employee?',
+    }
+  ])
+  .then(function(userInput){
+    const sql = `INSERT INTO employee(first_name,last_name,role_id,manager_id) VALUES (?,?,?,?)`;
+    db.query(sql,[userInput.first_name,userInput.last_name,userInput.role_id,userInput.manager_id],(error, res)=>{
+      console.table('The employee has been added');
+    main();
+    })
+  })
+}
