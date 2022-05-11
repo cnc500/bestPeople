@@ -5,6 +5,7 @@ const console_table = require ('console.table');
 const PORT = process.env.PORT || 3001;
 const db = require ('./db/connection.js');
 
+// This is the main function where the user decides to choose from the menu of choices. 
 function main(){
   return inquirer.prompt([
     {
@@ -14,6 +15,7 @@ function main(){
       choices: ['View Departments', 'View Roles', 'View Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role', 'Exit'],
     }
   ])
+  // Depending upon the user's choice from the above menu, the appropriate function is called.
   .then(function(userChoice){
     console.log(userChoice.main);
     if (userChoice.main === 'View Departments'){
@@ -40,35 +42,37 @@ function main(){
   })
 }
 
+// Calls the main function.
 main();
 
+// Calls the department table to be displayed from the database.
 function viewDpt(){
   const sql = `SELECT * FROM department`;
   db.query (sql,(error, res)=>{
     console.table(res);
     main();
-
   })
 }
 
+// Calls the role table to be displayed from the database.
 function viewRoles(){
   const sql = `SELECT * FROM role`;
   db.query (sql,(error, res)=>{
     console.table(res);
     main();
-
   });
 }
 
+// Calls the employee table to be displayed from the database.
 function viewEmployees(){
   const sql = `SELECT * FROM employee`;
   db.query (sql,(error, res)=>{
     console.table(res);
     main();
-
   });
 }
 
+// Inserts a new department into the department table within the database.
 function addDpt(){
   return inquirer.prompt([
     {
@@ -86,6 +90,7 @@ function addDpt(){
   })
 }
 
+// Creates a new role including salary and department_id which is added to the role table within the database.
 function addRole(){
   return inquirer.prompt([
     {
@@ -115,6 +120,7 @@ function addRole(){
   })
 }
 
+// Creates a new employee including first name and last name, role and manager name.
 function addEmployee(){
   return inquirer.prompt([
     {
@@ -147,6 +153,7 @@ function addEmployee(){
   })
 }
 
+// Updates the role of the employee.
 function updateEmployeeRole(){
   return inquirer.prompt([
     {
@@ -162,7 +169,7 @@ function updateEmployeeRole(){
   ])
   .then(function(userInput){
     const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
-    db.query(sql,[userInput.id,userInput.role_id],(error, res)=>{
+    db.query(sql,[userInput.role_id,userInput.id],(error, res)=>{
       console.table('The role of the employee has been updated');
     main();
     })
