@@ -34,6 +34,9 @@ function main(){
     if (userChoice.main === 'Add an Employee'){
       addEmployee();
     }
+    if (userChoice.main === 'Update an Employee Role'){
+      updateEmployeeRole();
+    }
   })
 }
 
@@ -100,7 +103,7 @@ function addRole(){
     {
       type: 'input',
       name: 'department_id',
-      message: 'Which department does this role belong to?',
+      message: 'Which department does this role belong to? Enter Dept ID#',
     },
   ])
   .then(function(userInput){
@@ -127,12 +130,12 @@ function addEmployee(){
     {
       type: 'input',
       name: 'role_id',
-      message: 'What is the role of this new employee?',
+      message: 'What is the role of this new employee? Enter role ID#.',
     },
     {
       type: 'input',
       name: 'manager_id',
-      message: 'Who is the manager of this new employee?',
+      message: 'Who is the manager of this new employee? Enter employee/manager ID#.',
     }
   ])
   .then(function(userInput){
@@ -143,3 +146,26 @@ function addEmployee(){
     })
   })
 }
+
+function updateEmployeeRole(){
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'id',
+      message: 'For which employee do you want change their role?  Enter their employee ID#', 
+    },
+    {
+      type: 'input',
+      name: 'role_id',
+      message: 'Which role do you want that employee to change to?  Enter the role ID#',
+    },
+  ])
+  .then(function(userInput){
+    const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+    db.query(sql,[userInput.id,userInput.role_id],(error, res)=>{
+      console.table('The role of the employee has been updated');
+    main();
+    })
+  })
+}
+
